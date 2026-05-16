@@ -1,653 +1,665 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DET·Study — Duolingo English Test Prep</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>"/>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:#07091a;font-family:'Outfit',sans-serif;color:#e2e8f0}
-    ::-webkit-scrollbar{width:6px}
-    ::-webkit-scrollbar-track{background:#0d1127}
-    ::-webkit-scrollbar-thumb{background:#2d3a5e;border-radius:3px}
-    button{cursor:pointer;font-family:'Outfit',sans-serif}
-    input,textarea{font-family:'Outfit',sans-serif}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes bounceIn{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-    .fade-in{animation:fadeIn .4s ease both}
-    .bounce-in{animation:bounceIn .5s cubic-bezier(.36,.07,.19,.97) both}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DET Study — Duolingo English Test Prep</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh}
+body{background:#07091a;font-family:'Outfit',sans-serif;color:#e2e8f0}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0d1127}
+::-webkit-scrollbar-thumb{background:#2d3a5e;border-radius:3px}
+button,input,textarea{font-family:'Outfit',sans-serif}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounceIn{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+.fi{animation:fadeIn .35s ease both}
+.bi{animation:bounceIn .4s ease both}
+</style>
 </head>
 <body>
 <div id="root"></div>
+<script>
+var h = React.createElement;
+var useState = React.useState;
+var useEffect = React.useEffect;
+var useRef = React.useRef;
 
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
-
-// ── CORES ──
-const C = {
+// ── CORES
+var C = {
   bg:"#07091a", surface:"#0d1127", card:"#111729", border:"#1e2d4a",
   accent:"#22d3a0", green:"#4ade80", red:"#f87171", yellow:"#fbbf24",
-  blue:"#60a5fa", purple:"#a78bfa", text:"#e2e8f0", muted:"#64748b",
+  blue:"#60a5fa", purple:"#a78bfa", text:"#e2e8f0", muted:"#64748b"
 };
 
-// ── DADOS ──
-const READ_SELECT_ROUNDS = [
+// ── DADOS
+var RS_ROUNDS = [
   [
-    {w:"absent",r:true},{w:"abcent",r:false},{w:"benefit",r:true},{w:"benfit",r:false},
-    {w:"concept",r:true},{w:"concapt",r:false},{w:"develop",r:true},{w:"develob",r:false},
-    {w:"evidence",r:true},{w:"evidance",r:false},{w:"function",r:true},{w:"functon",r:false},
-    {w:"general",r:true},{w:"generel",r:false},{w:"history",r:true},{w:"histary",r:false},
-    {w:"impact",r:true},{w:"impcat",r:false},{w:"justify",r:true},{w:"justidy",r:false},
+    {w:"absent",r:1},{w:"abcent",r:0},{w:"benefit",r:1},{w:"benfit",r:0},
+    {w:"concept",r:1},{w:"concapt",r:0},{w:"develop",r:1},{w:"develob",r:0},
+    {w:"evidence",r:1},{w:"evidance",r:0},{w:"function",r:1},{w:"functon",r:0},
+    {w:"general",r:1},{w:"generel",r:0},{w:"history",r:1},{w:"histary",r:0},
+    {w:"impact",r:1},{w:"impcat",r:0},{w:"justify",r:1},{w:"justidy",r:0}
   ],
   [
-    {w:"achieve",r:true},{w:"acheve",r:false},{w:"balance",r:true},{w:"balence",r:false},
-    {w:"capable",r:true},{w:"capadle",r:false},{w:"discuss",r:true},{w:"discus",r:false},
-    {w:"efficient",r:true},{w:"eficient",r:false},{w:"global",r:true},{w:"globle",r:false},
-    {w:"human",r:true},{w:"humun",r:false},{w:"involve",r:true},{w:"invove",r:false},
-    {w:"knowledge",r:true},{w:"knowlege",r:false},{w:"language",r:true},{w:"lanquage",r:false},
+    {w:"achieve",r:1},{w:"acheve",r:0},{w:"balance",r:1},{w:"balence",r:0},
+    {w:"capable",r:1},{w:"capadle",r:0},{w:"discuss",r:1},{w:"discuse",r:0},
+    {w:"efficient",r:1},{w:"eficient",r:0},{w:"global",r:1},{w:"globle",r:0},
+    {w:"human",r:1},{w:"humun",r:0},{w:"involve",r:1},{w:"invove",r:0},
+    {w:"knowledge",r:1},{w:"knowlege",r:0},{w:"language",r:1},{w:"lanquage",r:0}
   ],
   [
-    {w:"maintain",r:true},{w:"maintan",r:false},{w:"network",r:true},{w:"netwerk",r:false},
-    {w:"observe",r:true},{w:"obsirve",r:false},{w:"process",r:true},{w:"procces",r:false},
-    {w:"quality",r:true},{w:"qualety",r:false},{w:"research",r:true},{w:"resarch",r:false},
-    {w:"society",r:true},{w:"socyety",r:false},{w:"theory",r:true},{w:"therry",r:false},
-    {w:"unique",r:true},{w:"uniqe",r:false},{w:"various",r:true},{w:"vareus",r:false},
-  ],
+    {w:"maintain",r:1},{w:"maintan",r:0},{w:"network",r:1},{w:"netwerk",r:0},
+    {w:"observe",r:1},{w:"obsirve",r:0},{w:"process",r:1},{w:"procces",r:0},
+    {w:"quality",r:1},{w:"qualety",r:0},{w:"research",r:1},{w:"resarch",r:0},
+    {w:"society",r:1},{w:"socyety",r:0},{w:"theory",r:1},{w:"therry",r:0},
+    {w:"unique",r:1},{w:"uniqe",r:0},{w:"various",r:1},{w:"vareus",r:0}
+  ]
 ];
 
-const READ_COMPLETE_DATA = [
+var RC_DATA = [
   {answer:"concept",  missing:[1,3]},
   {answer:"develop",  missing:[1,3]},
   {answer:"evidence", missing:[0,2]},
-  {answer:"function", missing:[1,6,7]},
+  {answer:"function", missing:[1,6]},
   {answer:"history",  missing:[0,4]},
   {answer:"knowledge",missing:[2,4]},
   {answer:"maintain", missing:[1,5]},
   {answer:"observe",  missing:[0,2]},
-  {answer:"research", missing:[1,3,4]},
-  {answer:"society",  missing:[1,4]},
+  {answer:"research", missing:[1,4]},
+  {answer:"society",  missing:[1,4]}
 ];
 
-const VOCABULARY_DATA = [
-  {q:"The scientist provided _____ to support her claim.",word:"evidence",opts:["evidence","opinion","feeling","question"],def:"Proof or facts that help confirm something is true"},
-  {q:"We need to _____ the data before drawing conclusions.",word:"analyze",opts:["analyze","ignore","forget","damage"],def:"Examine something in detail to understand it better"},
-  {q:"The new policy will _____ thousands of people.",word:"affect",opts:["affect","delay","observe","create"],def:"Have an effect or influence on something/someone"},
-  {q:"She had to _____ her position after seeing the new data.",word:"revise",opts:["revise","repeat","remove","reject"],def:"Change or update something to improve or correct it"},
-  {q:"The report _____ the main challenges facing the industry.",word:"highlights",opts:["highlights","ignores","follows","replaces"],def:"Draws attention to the most important aspects"},
-  {q:"The results were not _____; they surprised everyone.",word:"anticipated",opts:["anticipated","forgotten","created","avoided"],def:"Expected or predicted in advance"},
-  {q:"His argument was _____ by strong logic and clear examples.",word:"supported",opts:["supported","weakened","replaced","ignored"],def:"Backed up or strengthened by reasoning or proof"},
-  {q:"The two approaches are _____; they cannot coexist.",word:"incompatible",opts:["incompatible","identical","flexible","optional"],def:"Unable to exist or work together in harmony"},
+var VOC_DATA = [
+  {q:"The scientist provided _____ to support her claim.",   word:"evidence",    opts:["evidence","opinion","feeling","question"],   def:"Proof that helps confirm something is true"},
+  {q:"We need to _____ the data before drawing conclusions.",word:"analyze",     opts:["analyze","ignore","forget","damage"],        def:"Examine in detail to understand better"},
+  {q:"The new policy will _____ thousands of people.",       word:"affect",      opts:["affect","delay","observe","create"],         def:"Have an influence on something or someone"},
+  {q:"She had to _____ her position after new evidence.",    word:"revise",      opts:["revise","repeat","remove","reject"],         def:"Change something to improve or correct it"},
+  {q:"The report _____ the main challenges in the sector.",  word:"highlights",  opts:["highlights","ignores","follows","replaces"], def:"Draws attention to the most important parts"},
+  {q:"The results were not _____; they surprised everyone.", word:"anticipated", opts:["anticipated","forgotten","created","avoided"],def:"Expected or predicted in advance"},
+  {q:"His argument was _____ by logic and clear examples.",  word:"supported",   opts:["supported","weakened","replaced","ignored"], def:"Backed up by reasoning or proof"},
+  {q:"The two methods are _____; they cannot work together.",word:"incompatible",opts:["incompatible","identical","flexible","optional"],def:"Unable to exist or work together"}
 ];
 
-const WRITING_PROMPTS = [
+var PROMPTS = [
   "Do you think technology has made people more or less connected to each other? Explain your view.",
   "Describe a challenge you faced and how you overcame it.",
   "Should universities focus more on practical skills or academic knowledge? Give reasons.",
   "What is the most important invention of the past 50 years and why?",
-  "Is working from home better or worse than working in an office? Explain your perspective.",
+  "Is working from home better or worse than working in an office? Explain your perspective."
 ];
 
-const TIPS = [
-  {icon:"⚡",title:"Read & Select",tip:"Você tem ~15s. Clique RÁPIDO nas palavras que reconhece. Não pense demais — sua intuição é boa para palavras comuns.",color:C.blue},
-  {icon:"🔤",title:"Read & Complete",tip:"Pense no som da palavra. Se parece estranho dizer em voz alta, provavelmente está errado. Foque em prefixos e sufixos.",color:C.purple},
-  {icon:"✍️",title:"Writing Tips",tip:"Use conectivos: 'Furthermore', 'However', 'In contrast'. O avaliador valoriza variedade de vocabulário e estruturas gramaticais complexas.",color:C.accent},
-  {icon:"🗣️",title:"Fale com Clareza",tip:"No 'Read Aloud', fale com ritmo natural. Pausas nos lugares certos e pronúncia clara valem mais do que velocidade.",color:C.yellow},
-  {icon:"🎯",title:"Meta: 60 pontos",tip:"60 pontos no DET equivale a ~B2. Foque em vocabulário acadêmico, gramática consistente e ideias bem organizadas na escrita.",color:C.green},
+var TIPS = [
+  {icon:"⚡",title:"Read & Select",tip:"Você tem ~15s. Clique RÁPIDO nas palavras que reconhece. Não pense demais — sua intuição é boa para palavras comuns.",col:C.blue},
+  {icon:"🔤",title:"Read & Complete",tip:"Pense no som da palavra. Se parece estranho dizer em voz alta, provavelmente está errado. Foque em prefixos e sufixos.",col:C.purple},
+  {icon:"✍️",title:"Writing",tip:"Use conectivos: Furthermore, However, In contrast. O avaliador valoriza variedade de vocabulário e estruturas complexas.",col:C.accent},
+  {icon:"🗣️",title:"Fale com Clareza",tip:"No Read Aloud, fale com ritmo natural. Pausas nos lugares certos e pronúncia clara valem mais do que velocidade.",col:C.yellow},
+  {icon:"🎯",title:"Meta: 60 pontos",tip:"60 pts no DET = nível B2. Foque em vocabulário acadêmico, gramática consistente e ideias bem organizadas na escrita.",col:C.green}
 ];
 
-function estimateDETScore(xp){
+// ── UTILIDADES
+function shuffle(arr){ return arr.slice().sort(function(){ return Math.random()-.5; }); }
+function rnd(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function estScore(xp){
   if(xp<50)return 35; if(xp<100)return 42; if(xp<200)return 50;
   if(xp<350)return 57; if(xp<500)return 62; if(xp<700)return 68; return 75;
 }
 
-// ── ESTILOS ──
-const card = {background:C.card,borderRadius:16,padding:24,border:`1px solid ${C.border}`,marginBottom:16,animation:"fadeIn .4s ease both"};
-const sectionTitle = {fontSize:13,fontWeight:700,color:C.accent,letterSpacing:1.5,marginBottom:16,textTransform:"uppercase"};
-const btn = (v="primary")=>({
-  padding:"12px 28px",borderRadius:12,border:"none",cursor:"pointer",
-  background:v==="primary"?C.accent:v==="ghost"?C.surface:C.border,
-  color:v==="primary"?"#07091a":C.text,fontWeight:700,fontSize:15,
-  border:v==="ghost"?`1px solid ${C.border}`:"none",transition:"all .2s",
-});
-const pBar = {height:8,borderRadius:4,background:C.border,overflow:"hidden"};
-const pFill = (pct,color=C.accent)=>({height:"100%",width:`${pct}%`,borderRadius:4,background:color,transition:"width .6s"});
+// ── ESTILOS BASE
+var CARD = {background:C.card,borderRadius:16,padding:24,border:"1px solid "+C.border,marginBottom:16};
+var ST   = {fontSize:12,fontWeight:700,color:C.accent,letterSpacing:1.5,marginBottom:14,textTransform:"uppercase"};
 
-// ── DASHBOARD ──
-function Dashboard({xp,onStart,completed}){
-  const score=estimateDETScore(xp);
-  const pct=Math.min((score/60)*100,100);
-  const exercises=[
-    {id:"read-select",label:"Read & Select",icon:"👁",desc:"Identifique palavras reais em inglês",xpR:20,time:"~1 min",color:C.blue},
-    {id:"read-complete",label:"Read & Complete",icon:"✏️",desc:"Preencha as letras que faltam",xpR:25,time:"~2 min",color:C.purple},
-    {id:"vocabulary",label:"Vocabulary",icon:"📖",desc:"Múltipla escolha — significados",xpR:20,time:"~2 min",color:C.yellow},
-    {id:"writing",label:"Writing Practice",icon:"🖊",desc:"Escreva e receba avaliação da IA",xpR:50,time:"~5 min",color:C.accent},
-    {id:"tip",label:"Estratégias DET",icon:"💡",desc:"Técnicas para mandar bem no teste",xpR:0,time:"~1 min",color:"#fb923c"},
+function Btn(props){
+  var v = props.variant || "primary";
+  var base = {
+    padding:"12px 26px", borderRadius:12, border:"none", cursor:"pointer",
+    fontWeight:700, fontSize:15, transition:"all .2s", outline:"none",
+    background: v==="primary" ? C.accent : v==="ghost" ? "transparent" : C.border,
+    color: v==="primary" ? "#07091a" : C.text
+  };
+  if(v==="ghost") base.border = "1px solid "+C.border;
+  var style = Object.assign({}, base, props.style||{});
+  return h("button", {style:style, onClick:props.onClick, disabled:props.disabled}, props.children);
+}
+
+function ProgBar(pct, col){
+  col = col||C.accent;
+  return h("div",{style:{height:8,borderRadius:4,background:C.border,overflow:"hidden",marginBottom:14}},
+    h("div",{style:{height:"100%",width:pct+"%",background:col,borderRadius:4,transition:"width .5s"}}));
+}
+
+// ── DASHBOARD
+function Dashboard(props){
+  var score = estScore(props.xp);
+  var pct   = Math.min((score/60)*100, 100);
+  var exs = [
+    {id:"read-select",  label:"Read & Select",    icon:"👁",  desc:"Identifique palavras reais em inglês",  xpR:20, time:"~1 min", col:C.blue},
+    {id:"read-complete",label:"Read & Complete",  icon:"✏️", desc:"Preencha as letras que faltam",          xpR:25, time:"~2 min", col:C.purple},
+    {id:"vocabulary",   label:"Vocabulary",       icon:"📖", desc:"Múltipla escolha — significados",        xpR:20, time:"~2 min", col:C.yellow},
+    {id:"writing",      label:"Writing Practice", icon:"🖊", desc:"Escreva e receba avaliação da IA",       xpR:50, time:"~5 min", col:C.accent},
+    {id:"tips",         label:"Estratégias DET",  icon:"💡", desc:"Técnicas para ir bem no teste",          xpR:0,  time:"~1 min", col:"#fb923c"}
   ];
-  return (
-    <div className="fade-in">
-      <div style={{...card,background:"linear-gradient(135deg,#111a35,#0d1f3a)",border:`1px solid rgba(34,211,160,.2)`}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-          <div>
-            <div style={sectionTitle}>Seu progresso DET</div>
-            <div style={{fontSize:52,fontWeight:900,color:C.accent,lineHeight:1}}>{score}</div>
-            <div style={{fontSize:13,color:C.muted,marginTop:4}}>pontos estimados · Meta: <span style={{color:C.yellow,fontWeight:700}}>60</span></div>
-          </div>
-          <div style={{textAlign:"right"}}>
-            <div style={{fontSize:11,color:C.muted,letterSpacing:1,fontWeight:600}}>NÍVEL</div>
-            <div style={{fontSize:28,fontWeight:800,color:score>=60?C.green:C.yellow}}>
-              {score>=60?"B2":score>=45?"B1+":"B1"}
-            </div>
-            <div style={{fontSize:11,color:C.muted}}>{score>=60?"Meta atingida! 🎉":"Continue praticando"}</div>
-          </div>
-        </div>
-        <div style={{marginTop:20}}>
-          <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-            <span style={{fontSize:12,color:C.muted}}>Progresso até a meta (60 pts)</span>
-            <span style={{fontSize:12,color:C.accent,fontWeight:700}}>{Math.round(pct)}%</span>
-          </div>
-          <div style={pBar}><div style={pFill(pct)}/></div>
-        </div>
-        <div style={{display:"flex",gap:20,marginTop:20,flexWrap:"wrap"}}>
-          {[["XP Total",xp+"xp"],["Pontuação",score+"/160"],["Feito hoje",completed.length+" ex"]].map(([l,v])=>(
-            <div key={l} style={{flex:1,minWidth:90}}>
-              <div style={{fontSize:11,color:C.muted,fontWeight:600}}>{l}</div>
-              <div style={{fontSize:18,fontWeight:800,color:C.text}}>{v}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={sectionTitle}>Exercícios de hoje</div>
-      {exercises.map(ex=>{
-        const done=completed.includes(ex.id);
-        return (
-          <div key={ex.id}
-            style={{...card,display:"flex",alignItems:"center",gap:16,cursor:done?"default":"pointer",
-              opacity:done?.6:1,borderLeft:`3px solid ${done?C.green:ex.color}`}}
-            onClick={()=>!done&&onStart(ex.id)}
-            onMouseEnter={e=>{if(!done)e.currentTarget.style.background="#161f38"}}
-            onMouseLeave={e=>e.currentTarget.style.background=C.card}
-          >
-            <div style={{fontSize:26,width:46,height:46,display:"flex",alignItems:"center",justifyContent:"center",background:`${ex.color}18`,borderRadius:12}}>{ex.icon}</div>
-            <div style={{flex:1}}>
-              <div style={{display:"flex",alignItems:"center",gap:8}}>
-                <div style={{fontSize:16,fontWeight:700,color:C.text}}>{ex.label}</div>
-                {done&&<span style={{fontSize:11,background:`${C.green}22`,color:C.green,padding:"2px 8px",borderRadius:20,fontWeight:700}}>✓ Feito</span>}
-              </div>
-              <div style={{fontSize:13,color:C.muted,marginTop:2}}>{ex.desc}</div>
-            </div>
-            <div style={{textAlign:"right"}}>
-              {ex.xpR>0&&<div style={{fontSize:14,fontWeight:700,color:ex.color}}>+{ex.xpR} xp</div>}
-              <div style={{fontSize:11,color:C.muted}}>{ex.time}</div>
-            </div>
-          </div>
-        );
-      })}
-      <div style={{...card,background:"#0d1a2e",border:`1px solid #1e3a5f`}}>
-        <div style={sectionTitle}>💡 Dica rápida</div>
-        <div style={{fontSize:14,color:C.text,lineHeight:1.7}}>
-          No <strong>Read & Select</strong>, procure sufixos como <code style={{background:"#1e3a5f",padding:"1px 6px",borderRadius:4,color:C.blue}}>-tion</code>, <code style={{background:"#1e3a5f",padding:"1px 6px",borderRadius:4,color:C.blue}}>-ment</code>, <code style={{background:"#1e3a5f",padding:"1px 6px",borderRadius:4,color:C.blue}}>-ence</code>. Palavras falsas geralmente têm combinações impossíveis como <em style={{color:C.red}}>-dp-</em> ou <em style={{color:C.red}}>-tb-</em>.
-        </div>
-      </div>
-    </div>
+  return h("div",{className:"fi"},
+    // Score card
+    h("div",{style:Object.assign({},CARD,{background:"linear-gradient(135deg,#111a35,#0d1f3a)",border:"1px solid rgba(34,211,160,.25)"})},
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18}},
+        h("div",null,
+          h("div",{style:ST},"Seu progresso DET"),
+          h("div",{style:{fontSize:56,fontWeight:900,color:C.accent,lineHeight:1}},score),
+          h("div",{style:{fontSize:13,color:C.muted,marginTop:4}},"estimado · Meta: ",
+            h("span",{style:{color:C.yellow,fontWeight:700}},"60 pts"))
+        ),
+        h("div",{style:{textAlign:"right"}},
+          h("div",{style:{fontSize:11,color:C.muted,fontWeight:600,letterSpacing:1}},"NÍVEL"),
+          h("div",{style:{fontSize:28,fontWeight:800,color:score>=60?C.green:C.yellow}},
+            score>=60?"B2":score>=45?"B1+":"B1"),
+          h("div",{style:{fontSize:11,color:C.muted}},score>=60?"Meta atingida! 🎉":"Continue praticando")
+        )
+      ),
+      h("div",{style:{marginBottom:8}},
+        h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:6}},
+          h("span",{style:{fontSize:12,color:C.muted}},"Progresso até a meta (60 pts)"),
+          h("span",{style:{fontSize:12,color:C.accent,fontWeight:700}},Math.round(pct)+"%")
+        ),
+        ProgBar(pct)
+      ),
+      h("div",{style:{display:"flex",gap:20,flexWrap:"wrap"}},
+        [["XP",props.xp+"xp"],["Pontos",score+"/160"],["Feitos",props.completed.length+" ex"]].map(function(item){
+          return h("div",{key:item[0]},
+            h("div",{style:{fontSize:11,color:C.muted,fontWeight:600}},item[0]),
+            h("div",{style:{fontSize:18,fontWeight:800}},item[1]));
+        })
+      )
+    ),
+    h("div",{style:ST},"Exercícios de hoje"),
+    exs.map(function(ex){
+      var done = props.completed.indexOf(ex.id)>=0;
+      return h("div",{key:ex.id,
+        className:"fi",
+        style:Object.assign({},CARD,{display:"flex",alignItems:"center",gap:16,
+          cursor:done?"default":"pointer",opacity:done?.6:1,
+          borderLeft:"3px solid "+(done?C.green:ex.col)}),
+        onClick:function(){ if(!done) props.onStart(ex.id); },
+        onMouseEnter:function(e){ if(!done) e.currentTarget.style.background="#161f38"; },
+        onMouseLeave:function(e){ e.currentTarget.style.background=C.card; }
+      },
+        h("div",{style:{fontSize:26,width:44,height:44,display:"flex",alignItems:"center",
+          justifyContent:"center",background:ex.col+"18",borderRadius:12,flexShrink:0}},ex.icon),
+        h("div",{style:{flex:1}},
+          h("div",{style:{display:"flex",alignItems:"center",gap:8}},
+            h("div",{style:{fontSize:16,fontWeight:700}},ex.label),
+            done&&h("span",{style:{fontSize:11,background:C.green+"22",color:C.green,
+              padding:"2px 8px",borderRadius:20,fontWeight:700}},"✓ Feito")
+          ),
+          h("div",{style:{fontSize:13,color:C.muted,marginTop:2}},ex.desc)
+        ),
+        h("div",{style:{textAlign:"right"}},
+          ex.xpR>0&&h("div",{style:{fontSize:14,fontWeight:700,color:ex.col}},"+"+ex.xpR+" xp"),
+          h("div",{style:{fontSize:11,color:C.muted}},ex.time)
+        )
+      );
+    }),
+    h("div",{style:Object.assign({},CARD,{background:"#0d1a2e",border:"1px solid #1e3a5f"})},
+      h("div",{style:ST},"💡 Dica rápida"),
+      h("div",{style:{fontSize:14,lineHeight:1.7}},
+        "No Read & Select, procure sufixos como ",
+        h("code",{style:{background:"#1e3a5f",padding:"1px 6px",borderRadius:4,color:C.blue}},"-tion"),
+        ", ",h("code",{style:{background:"#1e3a5f",padding:"1px 6px",borderRadius:4,color:C.blue}},"-ment"),
+        ", ",h("code",{style:{background:"#1e3a5f",padding:"1px 6px",borderRadius:4,color:C.blue}},"-ence"),
+        ". Palavras falsas têm combinações como ",
+        h("em",{style:{color:C.red}},"-dp-")," ou ",h("em",{style:{color:C.red}},"-tb-"),"."
+      )
+    )
   );
 }
 
-// ── READ & SELECT ──
-function ReadSelect({onDone}){
-  const round=READ_SELECT_ROUNDS[Math.floor(Math.random()*READ_SELECT_ROUNDS.length)];
-  const shuffled=[...round].sort(()=>Math.random()-.5);
-  const [selected,setSelected]=useState(new Set());
-  const [submitted,setSubmitted]=useState(false);
-  const [timeLeft,setTimeLeft]=useState(47);
-  const timerRef=useRef(null);
+// ── READ & SELECT
+function ReadSelect(props){
+  var initWords = React.useMemo(function(){ return shuffle(rnd(RS_ROUNDS)); },[]);
+  var _s1 = useState(initWords);   var words = _s1[0];
+  var _s2 = useState({});          var sel = _s2[0];  var setSel = _s2[1];
+  var _s3 = useState(false);       var done = _s3[0]; var setDone = _s3[1];
+  var _s4 = useState(47);          var time = _s4[0]; var setTime = _s4[1];
+  var timerRef = useRef(null);
 
-  useEffect(()=>{
-    timerRef.current=setInterval(()=>{
-      setTimeLeft(t=>{ if(t<=1){clearInterval(timerRef.current);setSubmitted(true);return 0;} return t-1; });
+  useEffect(function(){
+    timerRef.current = setInterval(function(){
+      setTime(function(t){
+        if(t<=1){ clearInterval(timerRef.current); setDone(true); return 0; }
+        return t-1;
+      });
     },1000);
-    return()=>clearInterval(timerRef.current);
+    return function(){ clearInterval(timerRef.current); };
   },[]);
 
-  const toggle=(w)=>{ if(submitted)return; setSelected(s=>{const n=new Set(s);n.has(w)?n.delete(w):n.add(w);return n;}); };
-  const submit=()=>{ clearInterval(timerRef.current);setSubmitted(true); };
-
-  const correct=shuffled.filter(x=>x.r&&selected.has(x.w)).length;
-  const total=shuffled.filter(x=>x.r).length;
-  const wrong=shuffled.filter(x=>!x.r&&selected.has(x.w)).length;
-  const score=Math.max(0,correct-wrong);
-
-  return (
-    <div className="fade-in">
-      <div style={card}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-          <div>
-            <div style={sectionTitle}>👁 Read & Select</div>
-            <div style={{fontSize:14,color:C.muted}}>Clique em todas as <strong style={{color:C.text}}>palavras reais</strong> em inglês</div>
-          </div>
-          {!submitted&&(
-            <div style={{padding:"8px 16px",borderRadius:10,background:timeLeft<10?"#dc262622":"#1e2d4a",
-              color:timeLeft<10?C.red:C.text,fontFamily:"DM Mono,monospace",fontSize:20,fontWeight:700,
-              border:`1px solid ${timeLeft<10?C.red:C.border}`}}>{timeLeft}s</div>
-          )}
-        </div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:10,marginBottom:24}}>
-          {shuffled.map((item,i)=>{
-            let bg=selected.has(item.w)?`${C.accent}22`:C.surface;
-            let border2=selected.has(item.w)?C.accent:C.border;
-            let color=selected.has(item.w)?C.accent:C.text;
-            if(submitted){
-              if(item.r&&selected.has(item.w)){bg="#16a34a22";border2=C.green;color=C.green;}
-              else if(item.r&&!selected.has(item.w)){bg="#dc262622";border2=C.red;color=C.red;}
-              else if(!item.r&&selected.has(item.w)){bg="#dc262622";border2=C.red;color=C.red;}
-              else{bg=C.surface;border2=C.border;color=C.muted;}
-            }
-            return (
-              <button key={item.w+i} onClick={()=>toggle(item.w)} style={{
-                padding:"10px 18px",borderRadius:10,border:`1.5px solid ${border2}`,
-                background:bg,color,fontWeight:600,fontSize:15,transition:"all .15s",
-              }}>{item.w}</button>
-            );
-          })}
-        </div>
-        {!submitted
-          ?<button style={btn()} onClick={submit}>Verificar →</button>
-          :(
-            <div className="bounce-in">
-              <div style={{...card,background:score>=total*.7?"#16a34a22":"#dc262622",
-                border:`1px solid ${score>=total*.7?C.green:C.red}`,textAlign:"center",marginBottom:16}}>
-                <div style={{fontSize:32,marginBottom:8}}>{score>=total*.7?"🎯":"📚"}</div>
-                <div style={{fontSize:20,fontWeight:800,color:score>=total*.7?C.green:C.red}}>{score}/{total} corretas</div>
-                <div style={{fontSize:13,color:C.muted,marginTop:4}}>{correct} acertos · {wrong} erros · {total-correct} perdidas</div>
-              </div>
-              <button style={btn()} onClick={()=>onDone(20)}>+ 20 XP · Continuar →</button>
-            </div>
-          )
-        }
-      </div>
-    </div>
-  );
-}
-
-// ── READ & COMPLETE ──
-function ReadComplete({onDone}){
-  const questions=[...READ_COMPLETE_DATA].sort(()=>Math.random()-.5).slice(0,6);
-  const [idx,setIdx]=useState(0);
-  const [input,setInput]=useState("");
-  const [results,setResults]=useState([]);
-  const [checked,setChecked]=useState(false);
-  const done=idx>=questions.length;
-  const q=questions[idx]||{};
-
-  const buildDisplay=(q)=>{
-    if(!q.answer)return[];
-    return q.answer.split("").map((ch,i)=>({ch,blank:(q.missing||[]).includes(i)});
-  };
-
-  const check=()=>{
-    if(!input.trim())return;
-    const correct=input.trim().toLowerCase()===q.answer.toLowerCase();
-    setResults(r=>[...r,{answer:q.answer,user:input,correct}]);
-    setChecked(true);
-  };
-  const next=()=>{setInput("");setChecked(false);setIdx(i=>i+1);};
-
-  if(done){
-    const ok=results.filter(r=>r.correct).length;
-    return (
-      <div className="fade-in" style={card}>
-        <div style={sectionTitle}>✏️ Resultado</div>
-        <div style={{textAlign:"center",marginBottom:24}}>
-          <div style={{fontSize:48,marginBottom:8}}>{ok>=4?"✨":"📖"}</div>
-          <div style={{fontSize:28,fontWeight:800,color:C.accent}}>{ok}/{questions.length}</div>
-          <div style={{fontSize:14,color:C.muted}}>palavras corretas</div>
-        </div>
-        {results.map((r,i)=>(
-          <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"10px 14px",borderRadius:10,
-            background:r.correct?"#16a34a18":"#dc262618",marginBottom:8,
-            border:`1px solid ${r.correct?"#16a34a33":"#dc262633"}`}}>
-            <span style={{color:C.muted}}>{r.user}</span>
-            <span style={{fontWeight:700,color:r.correct?C.green:C.red}}>{r.answer}</span>
-          </div>
-        ))}
-        <button style={{...btn(),marginTop:16}} onClick={()=>onDone(25)}>+ 25 XP · Continuar →</button>
-      </div>
-    );
+  function toggle(w){
+    if(done) return;
+    setSel(function(s){ var n=Object.assign({},s); n[w]=!n[w]; return n; });
   }
+  function submit(){ clearInterval(timerRef.current); setDone(true); }
 
-  const chars=q.answer?q.answer.split("").map((ch,i)=>({ch,blank:(q.missing||[]).includes(i)})):[];
+  var correct = words.filter(function(x){ return x.r&&sel[x.w]; }).length;
+  var total   = words.filter(function(x){ return x.r; }).length;
+  var wrong   = words.filter(function(x){ return !x.r&&sel[x.w]; }).length;
+  var score   = Math.max(0, correct-wrong);
+  var ok      = score >= total*.7;
 
-  return (
-    <div className="fade-in">
-      <div style={card}>
-        <div style={{display:"flex",justifyContent:"space-between",marginBottom:16}}>
-          <div style={sectionTitle}>✏️ Read & Complete</div>
-          <span style={{fontSize:13,color:C.muted}}>{idx+1}/{questions.length}</span>
-        </div>
-        <div style={pBar}><div style={pFill((idx/questions.length)*100)}/></div>
-        <div style={{padding:"32px 0",textAlign:"center"}}>
-          <div style={{fontSize:13,color:C.muted,marginBottom:16}}>Complete a palavra:</div>
-          <div style={{fontSize:40,letterSpacing:8,marginBottom:8,fontFamily:"DM Mono,monospace"}}>
-            {chars.map((c,i)=>(
-              <span key={i} style={{color:c.blank?C.accent:C.text,
-                borderBottom:c.blank?`3px solid ${C.accent}`:"none",paddingBottom:c.blank?2:0}}>
-                {c.blank?"_":c.ch}
-              </span>
-            ))}
-          </div>
-          <div style={{fontSize:13,color:C.muted}}>({q.answer?q.answer.length:0} letras)</div>
-        </div>
-        <input value={input} onChange={e=>setInput(e.target.value)}
-          onKeyDown={e=>e.key==="Enter"&&!checked&&check()}
-          placeholder="Digite a palavra completa..."
-          disabled={checked}
-          style={{width:"100%",padding:"14px 18px",borderRadius:12,background:C.surface,
-            border:`1.5px solid ${checked?(results[results.length-1]?.correct?C.green:C.red):C.border}`,
-            color:C.text,fontSize:18,outline:"none",letterSpacing:3,textAlign:"center",marginBottom:12}}
-          autoFocus
-        />
-        {checked&&(
-          <div style={{padding:"12px 16px",borderRadius:10,marginBottom:12,textAlign:"center",
-            background:results[results.length-1]?.correct?"#16a34a22":"#dc262622",
-            border:`1px solid ${results[results.length-1]?.correct?C.green:C.red}`}}>
-            {results[results.length-1]?.correct
-              ?<span style={{color:C.green,fontWeight:700}}>✓ Correto!</span>
-              :<span style={{color:C.red,fontWeight:700}}>✗ Resposta: <strong style={{fontFamily:"monospace"}}>{q.answer}</strong></span>
-            }
-          </div>
-        )}
-        {!checked?<button style={btn()} onClick={check}>Verificar</button>
-          :<button style={btn()} onClick={next}>{idx===questions.length-1?"Ver resultado →":"Próxima →"}</button>}
-      </div>
-    </div>
-  );
-}
-
-// ── VOCABULARY ──
-function Vocabulary({onDone}){
-  const questions=[...VOCABULARY_DATA].sort(()=>Math.random()-.5).slice(0,5);
-  const [idx,setIdx]=useState(0);
-  const [chosen,setChosen]=useState(null);
-  const [results,setResults]=useState([]);
-  const done=idx>=questions.length;
-  const q=questions[idx]||{};
-
-  const pick=(opt)=>{
-    if(chosen)return;
-    const correct=opt===q.word;
-    setChosen(opt);
-    setResults(r=>[...r,{correct}]);
-  };
-  const next=()=>{setChosen(null);setIdx(i=>i+1);};
-
-  if(done){
-    const ok=results.filter(r=>r.correct).length;
-    return (
-      <div className="fade-in" style={card}>
-        <div style={sectionTitle}>📖 Resultado — Vocabulário</div>
-        <div style={{textAlign:"center",margin:"24px 0"}}>
-          <div style={{fontSize:48}}>{ok>=4?"🌟":"📚"}</div>
-          <div style={{fontSize:32,fontWeight:900,color:C.accent,marginTop:8}}>{ok}/{questions.length}</div>
-          <div style={{fontSize:14,color:C.muted}}>questões corretas</div>
-        </div>
-        <button style={btn()} onClick={()=>onDone(20)}>+ 20 XP · Continuar →</button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="fade-in">
-      <div style={card}>
-        <div style={{display:"flex",justifyContent:"space-between",marginBottom:16}}>
-          <div style={sectionTitle}>📖 Vocabulary</div>
-          <span style={{fontSize:13,color:C.muted}}>{idx+1}/{questions.length}</span>
-        </div>
-        <div style={pBar}><div style={pFill((idx/questions.length)*100,C.yellow)}/></div>
-        <div style={{padding:"24px 0 8px"}}>
-          <div style={{fontSize:11,color:C.muted,fontWeight:600,letterSpacing:1,marginBottom:12}}>COMPLETE A FRASE:</div>
-          <div style={{fontSize:18,fontWeight:600,color:C.text,lineHeight:1.7}}>{q.q}</div>
-          {chosen&&<div style={{fontSize:13,color:C.muted,fontStyle:"italic",marginTop:10,padding:"10px 14px",background:C.surface,borderRadius:8}}>{q.def}</div>}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:20}}>
-          {(q.opts||[]).map((opt,i)=>{
-            let bg=C.surface,border2=C.border,color=C.text;
-            if(chosen){
-              if(opt===q.word){bg="#16a34a22";border2=C.green;color=C.green;}
-              else if(opt===chosen){bg="#dc262622";border2=C.red;color=C.red;}
-              else{color=C.muted;}
-            }
-            return (
-              <button key={opt} onClick={()=>pick(opt)} style={{
-                padding:"14px 16px",borderRadius:12,border:`1.5px solid ${border2}`,
-                background:bg,color,fontWeight:600,fontSize:15,textAlign:"left",transition:"all .2s",
-              }}>
-                <span style={{color:C.muted,fontSize:12,marginRight:8}}>{["A","B","C","D"][i]}.</span>{opt}
-              </button>
-            );
-          })}
-        </div>
-        {chosen&&<button style={{...btn(),marginTop:16}} onClick={next}>
-          {idx===questions.length-1?"Ver resultado →":"Próxima →"}
-        </button>}
-      </div>
-    </div>
-  );
-}
-
-// ── WRITING ──
-function Writing({onDone}){
-  const [prompt]=useState(WRITING_PROMPTS[Math.floor(Math.random()*WRITING_PROMPTS.length)]);
-  const [text,setText]=useState("");
-  const [loading,setLoading]=useState(false);
-  const [feedback,setFeedback]=useState(null);
-  const [apiKey,setApiKey]=useState(localStorage.getItem("det_api_key")||"");
-  const [showKey,setShowKey]=useState(!localStorage.getItem("det_api_key"));
-  const wordCount=text.trim().split(/\s+/).filter(Boolean).length;
-
-  const saveKey=()=>{ localStorage.setItem("det_api_key",apiKey); setShowKey(false); };
-
-  const getFeedback=async()=>{
-    if(wordCount<30||!apiKey)return;
-    setLoading(true);
-    try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST",
-        headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-        body:JSON.stringify({
-          model:"claude-sonnet-4-20250514",
-          max_tokens:1000,
-          system:`Você é um avaliador do DET (Duolingo English Test). O aluno é brasileiro e quer atingir 60 pontos. Avalie a resposta de escrita de forma concisa.
-Retorne APENAS um JSON válido (sem markdown, sem backticks):
-{"score":<1-5>,"level":"<A2|B1|B1+|B2>","summary":"<2 frases em português>","strengths":["<ponto 1>","<ponto 2>"],"improvements":["<melhoria 1>","<melhoria 2>","<melhoria 3>"],"correctedSentence":"<reescreva uma frase melhorada>"}`,
-          messages:[{role:"user",content:`Prompt: "${prompt}"\nResposta: "${text}"`}]
+  return h("div",{className:"fi"},
+    h("div",{style:CARD},
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}},
+        h("div",null,
+          h("div",{style:ST},"👁 Read & Select"),
+          h("div",{style:{fontSize:14,color:C.muted}},
+            "Clique em todas as ",h("strong",null,"palavras reais")," em inglês")
+        ),
+        !done&&h("div",{style:{padding:"8px 14px",borderRadius:10,fontWeight:700,fontSize:20,
+          background:time<10?"#dc262622":"#1e2d4a",color:time<10?C.red:C.text,
+          fontFamily:"monospace",border:"1px solid "+(time<10?C.red:C.border)}},time+"s")
+      ),
+      h("div",{style:{display:"flex",flexWrap:"wrap",gap:10,marginBottom:24}},
+        words.map(function(item,i){
+          var s=sel[item.w];
+          var bg=s?C.accent+"22":C.surface, bo=s?C.accent:C.border, co=s?C.accent:C.text;
+          if(done){
+            if(item.r&&s){bg="#16a34a22";bo=C.green;co=C.green;}
+            else if(item.r&&!s){bg="#dc262622";bo=C.red;co=C.red;}
+            else if(!item.r&&s){bg="#dc262622";bo=C.red;co=C.red;}
+            else{bg=C.surface;bo=C.border;co=C.muted;}
+          }
+          return h("button",{key:item.w+i,onClick:function(){toggle(item.w);},
+            style:{padding:"10px 18px",borderRadius:10,border:"1.5px solid "+bo,
+              background:bg,color:co,fontWeight:600,fontSize:15,cursor:"pointer",
+              transition:"all .15s"}},item.w);
         })
-      });
-      const data=await res.json();
-      const raw=data.content?.find(b=>b.type==="text")?.text||"{}";
-      setFeedback(JSON.parse(raw.replace(/```json|```/g,"").trim()));
-    }catch(e){
-      setFeedback({score:3,level:"B1",summary:"Erro ao conectar. Verifique sua API key.",strengths:[],improvements:[],correctedSentence:""});
-    }
-    setLoading(false);
-  };
-
-  return (
-    <div className="fade-in">
-      <div style={card}>
-        <div style={sectionTitle}>🖊 Writing Practice</div>
-
-        {showKey&&(
-          <div style={{...card,background:"#1a1f2e",border:`1px solid ${C.yellow}33`,marginBottom:16}}>
-            <div style={{fontSize:13,color:C.yellow,fontWeight:700,marginBottom:8}}>🔑 API Key da Anthropic (para feedback de IA)</div>
-            <div style={{fontSize:12,color:C.muted,marginBottom:10}}>Obtenha em <a href="https://console.anthropic.com" target="_blank" style={{color:C.blue}}>console.anthropic.com</a> → API Keys</div>
-            <div style={{display:"flex",gap:8}}>
-              <input value={apiKey} onChange={e=>setApiKey(e.target.value)}
-                placeholder="sk-ant-..." type="password"
-                style={{flex:1,padding:"10px 14px",borderRadius:10,background:C.surface,
-                  border:`1px solid ${C.border}`,color:C.text,fontSize:13,outline:"none"}}/>
-              <button style={{...btn(),padding:"10px 16px",fontSize:13}} onClick={saveKey}>Salvar</button>
-            </div>
-            <button onClick={()=>setShowKey(false)} style={{...btn("ghost"),marginTop:8,padding:"6px 14px",fontSize:12}}>Pular por agora</button>
-          </div>
-        )}
-
-        <div style={{...card,background:"#0d1a2e",border:`1px solid #1e3a5f`,marginBottom:16}}>
-          <div style={{fontSize:11,color:C.blue,fontWeight:700,letterSpacing:1,marginBottom:8}}>PROMPT</div>
-          <div style={{fontSize:16,color:C.text,lineHeight:1.7,fontStyle:"italic"}}>"{prompt}"</div>
-        </div>
-
-        {!feedback?(
-          <>
-            <textarea value={text} onChange={e=>setText(e.target.value)}
-              placeholder="Escreva sua resposta em inglês aqui... (mínimo 50 palavras)"
-              style={{width:"100%",minHeight:160,padding:"14px 16px",background:C.surface,
-                border:`1.5px solid ${C.border}`,borderRadius:12,color:C.text,fontSize:15,
-                lineHeight:1.7,outline:"none",resize:"vertical",marginBottom:8}}
-            />
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4}}>
-              <div style={{display:"flex",gap:12,alignItems:"center"}}>
-                <span style={{fontSize:12,color:wordCount>=50?C.green:C.muted}}>{wordCount} palavras {wordCount>=50?"✓":""}</span>
-                {!showKey&&<button onClick={()=>setShowKey(true)} style={{...btn("ghost"),padding:"4px 10px",fontSize:11}}>🔑 API Key</button>}
-              </div>
-              <button style={{...btn(),opacity:wordCount<30||loading?0.5:1}}
-                disabled={wordCount<30||loading} onClick={getFeedback}>
-                {loading?"Analisando...":"Avaliar com IA →"}
-              </button>
-            </div>
-          </>
-        ):(
-          <div className="fade-in">
-            <div style={{...card,background:"linear-gradient(135deg,#0d1a2e,#111a35)",border:`1px solid rgba(34,211,160,.2)`,textAlign:"center",marginBottom:16}}>
-              <div style={{fontSize:13,color:C.muted,marginBottom:8}}>AVALIAÇÃO DA IA</div>
-              <div style={{fontSize:36,marginBottom:8}}>{["","😕","🙂","👍","🌟","🚀"][feedback.score||3]}</div>
-              <div style={{fontSize:28,fontWeight:900,color:C.accent}}>{feedback.level}</div>
-              <div style={{display:"flex",justifyContent:"center",gap:4,margin:"6px 0"}}>
-                {[1,2,3,4,5].map(n=><span key={n} style={{fontSize:20,opacity:n<=(feedback.score||3)?1:.2}}>★</span>)}
-              </div>
-              <div style={{fontSize:14,color:C.text,lineHeight:1.6,maxWidth:480,margin:"0 auto"}}>{feedback.summary}</div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
-              <div style={{...card,background:"#16a34a18",border:`1px solid #16a34a33`}}>
-                <div style={{fontSize:11,color:C.green,fontWeight:700,letterSpacing:1,marginBottom:10}}>✓ PONTOS FORTES</div>
-                {(feedback.strengths||[]).map((s,i)=><div key={i} style={{fontSize:13,color:C.text,marginBottom:6}}>• {s}</div>)}
-              </div>
-              <div style={{...card,background:"#dc262618",border:`1px solid #dc262633`}}>
-                <div style={{fontSize:11,color:C.red,fontWeight:700,letterSpacing:1,marginBottom:10}}>↑ MELHORAR</div>
-                {(feedback.improvements||[]).map((s,i)=><div key={i} style={{fontSize:13,color:C.text,marginBottom:6}}>• {s}</div>)}
-              </div>
-            </div>
-            {feedback.correctedSentence&&(
-              <div style={{...card,background:"#1a1f2e",marginBottom:16}}>
-                <div style={{fontSize:11,color:C.purple,fontWeight:700,letterSpacing:1,marginBottom:8}}>✏️ FRASE MELHORADA</div>
-                <div style={{fontSize:14,color:C.text,fontStyle:"italic",lineHeight:1.6}}>"{feedback.correctedSentence}"</div>
-              </div>
-            )}
-            <div style={{display:"flex",gap:12}}>
-              <button style={btn("ghost")} onClick={()=>{setText("");setFeedback(null);}}>Tentar novamente</button>
-              <button style={btn()} onClick={()=>onDone(50)}>+ 50 XP · Concluir →</button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+      ),
+      !done
+        ? h(Btn,{onClick:submit},"Verificar →")
+        : h("div",{className:"bi"},
+            h("div",{style:Object.assign({},CARD,{background:ok?"#16a34a22":"#dc262622",
+              border:"1px solid "+(ok?C.green:C.red),textAlign:"center",marginBottom:16})},
+              h("div",{style:{fontSize:32,marginBottom:8}},ok?"🎯":"📚"),
+              h("div",{style:{fontSize:20,fontWeight:800,color:ok?C.green:C.red}},score+"/"+total+" corretas"),
+              h("div",{style:{fontSize:13,color:C.muted,marginTop:4}},
+                correct+" acertos · "+wrong+" erros · "+(total-correct)+" perdidas")
+            ),
+            h(Btn,{onClick:function(){props.onDone(20);}},"+20 XP · Continuar →")
+          )
+    )
   );
 }
 
-// ── TIPS ──
-function TestTips({onDone}){
-  return (
-    <div className="fade-in">
-      <div style={{...card,marginBottom:16}}>
-        <div style={sectionTitle}>💡 Estratégias para o DET</div>
-        <div style={{fontSize:14,color:C.muted,lineHeight:1.7}}>
-          O DET testa <strong style={{color:C.text}}>rapidez de reconhecimento</strong> e <strong style={{color:C.text}}>profundidade de vocabulário</strong>:
-        </div>
-      </div>
-      {TIPS.map((tip,i)=>(
-        <div key={i} style={{...card,borderLeft:`3px solid ${tip.color}`}}>
-          <div style={{display:"flex",gap:14,alignItems:"flex-start"}}>
-            <div style={{fontSize:24,width:42,height:42,display:"flex",alignItems:"center",justifyContent:"center",
-              background:`${tip.color}18`,borderRadius:10,flexShrink:0}}>{tip.icon}</div>
-            <div>
-              <div style={{fontSize:15,fontWeight:700,color:tip.color,marginBottom:6}}>{tip.title}</div>
-              <div style={{fontSize:14,color:C.text,lineHeight:1.7}}>{tip.tip}</div>
-            </div>
-          </div>
-        </div>
-      ))}
-      <button style={btn()} onClick={()=>onDone(0)}>✓ Li tudo · Continuar</button>
-    </div>
+// ── READ & COMPLETE
+function ReadComplete(props){
+  var _q = React.useMemo(function(){ return shuffle(RC_DATA).slice(0,6); },[]);
+  var _s1 = useState(_q);         var qs = _s1[0];
+  var _s2 = useState(0);          var idx = _s2[0];    var setIdx = _s2[1];
+  var _s3 = useState("");         var val = _s3[0];    var setVal = _s3[1];
+  var _s4 = useState([]);         var results = _s4[0]; var setResults = _s4[1];
+  var _s5 = useState(false);      var checked = _s5[0]; var setChecked = _s5[1];
+
+  var finished = idx >= qs.length;
+  var q = qs[idx] || {answer:"",missing:[]};
+
+  function check(){
+    if(!val.trim()) return;
+    var ok = val.trim().toLowerCase() === q.answer.toLowerCase();
+    setResults(function(r){ return r.concat([{answer:q.answer,user:val,ok:ok}]); });
+    setChecked(true);
+  }
+  function next(){ setVal(""); setChecked(false); setIdx(function(i){return i+1;}); }
+
+  if(finished){
+    var okCount = results.filter(function(r){return r.ok;}).length;
+    return h("div",{className:"fi",style:CARD},
+      h("div",{style:ST},"✏️ Resultado"),
+      h("div",{style:{textAlign:"center",marginBottom:24}},
+        h("div",{style:{fontSize:48,marginBottom:8}},okCount>=4?"✨":"📖"),
+        h("div",{style:{fontSize:28,fontWeight:800,color:C.accent}},okCount+"/"+qs.length),
+        h("div",{style:{fontSize:14,color:C.muted}},"palavras corretas")
+      ),
+      results.map(function(r,i){
+        return h("div",{key:i,style:{display:"flex",justifyContent:"space-between",
+          padding:"10px 14px",borderRadius:10,marginBottom:8,
+          background:r.ok?"#16a34a18":"#dc262618",
+          border:"1px solid "+(r.ok?"#16a34a33":"#dc262633")}},
+          h("span",{style:{color:C.muted}},r.user),
+          h("span",{style:{fontWeight:700,color:r.ok?C.green:C.red}},r.answer));
+      }),
+      h(Btn,{style:{marginTop:16},onClick:function(){props.onDone(25);}},"+25 XP · Continuar →")
+    );
+  }
+
+  var chars = q.answer.split("").map(function(ch,i){
+    return {ch:ch, blank: q.missing.indexOf(i)>=0};
+  });
+  var lastOk = results.length>0 ? results[results.length-1].ok : null;
+
+  return h("div",{className:"fi"},
+    h("div",{style:CARD},
+      h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:12}},
+        h("div",{style:ST},"✏️ Read & Complete"),
+        h("span",{style:{fontSize:13,color:C.muted}},idx+1+"/"+qs.length)
+      ),
+      ProgBar((idx/qs.length)*100),
+      h("div",{style:{textAlign:"center",padding:"28px 0"}},
+        h("div",{style:{fontSize:13,color:C.muted,marginBottom:14}},"Complete a palavra:"),
+        h("div",{style:{fontSize:38,letterSpacing:8,fontFamily:"monospace",marginBottom:8}},
+          chars.map(function(c,i){
+            return h("span",{key:i,style:{color:c.blank?C.accent:C.text,
+              borderBottom:c.blank?"3px solid "+C.accent:"none",paddingBottom:c.blank?2:0}},
+              c.blank?"_":c.ch);
+          })
+        ),
+        h("div",{style:{fontSize:13,color:C.muted}},"("+q.answer.length+" letras)")
+      ),
+      h("input",{
+        value:val,
+        onChange:function(e){setVal(e.target.value);},
+        onKeyDown:function(e){if(e.key==="Enter"&&!checked) check();},
+        disabled:checked,
+        placeholder:"Digite a palavra completa...",
+        style:{width:"100%",padding:"14px 18px",borderRadius:12,background:C.surface,
+          border:"1.5px solid "+(checked?(lastOk?C.green:C.red):C.border),
+          color:C.text,fontSize:18,outline:"none",letterSpacing:3,
+          textAlign:"center",marginBottom:12}
+      }),
+      checked && h("div",{style:{padding:"12px",borderRadius:10,textAlign:"center",marginBottom:12,
+        background:lastOk?"#16a34a22":"#dc262622",
+        border:"1px solid "+(lastOk?C.green:C.red)}},
+        lastOk
+          ? h("span",{style:{color:C.green,fontWeight:700}},"✓ Correto!")
+          : h("span",{style:{color:C.red,fontWeight:700}},"✗ Resposta: ",
+              h("strong",{style:{fontFamily:"monospace"}},q.answer))
+      ),
+      !checked
+        ? h(Btn,{onClick:check},"Verificar")
+        : h(Btn,{onClick:next}, idx===qs.length-1?"Ver resultado →":"Próxima →")
+    )
   );
 }
 
-// ── APP ──
+// ── VOCABULARY
+function Vocabulary(props){
+  var _q = React.useMemo(function(){ return shuffle(VOC_DATA).slice(0,5); },[]);
+  var _s1 = useState(_q);       var qs = _s1[0];
+  var _s2 = useState(0);        var idx = _s2[0];    var setIdx = _s2[1];
+  var _s3 = useState(null);     var chosen = _s3[0]; var setChosen = _s3[1];
+  var _s4 = useState([]);       var results = _s4[0]; var setResults = _s4[1];
+  var finished = idx >= qs.length;
+  var q = qs[idx] || {q:"",word:"",opts:[],def:""};
+
+  function pick(opt){
+    if(chosen) return;
+    setChosen(opt);
+    setResults(function(r){ return r.concat([{ok:opt===q.word}]); });
+  }
+  function next(){ setChosen(null); setIdx(function(i){return i+1;}); }
+
+  if(finished){
+    var okCount = results.filter(function(r){return r.ok;}).length;
+    return h("div",{className:"fi",style:CARD},
+      h("div",{style:ST},"📖 Resultado — Vocabulário"),
+      h("div",{style:{textAlign:"center",margin:"24px 0"}},
+        h("div",{style:{fontSize:48}},okCount>=4?"🌟":"📚"),
+        h("div",{style:{fontSize:32,fontWeight:900,color:C.accent,marginTop:8}},okCount+"/"+qs.length),
+        h("div",{style:{fontSize:14,color:C.muted}},"questões corretas")
+      ),
+      h(Btn,{onClick:function(){props.onDone(20);}},"+20 XP · Continuar →")
+    );
+  }
+
+  return h("div",{className:"fi"},
+    h("div",{style:CARD},
+      h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:12}},
+        h("div",{style:ST},"📖 Vocabulary"),
+        h("span",{style:{fontSize:13,color:C.muted}},idx+1+"/"+qs.length)
+      ),
+      ProgBar((idx/qs.length)*100, C.yellow),
+      h("div",{style:{padding:"20px 0 8px"}},
+        h("div",{style:{fontSize:11,color:C.muted,fontWeight:600,letterSpacing:1,marginBottom:10}},
+          "COMPLETE A FRASE:"),
+        h("div",{style:{fontSize:18,fontWeight:600,lineHeight:1.7}},q.q),
+        chosen && h("div",{style:{fontSize:13,color:C.muted,fontStyle:"italic",marginTop:10,
+          padding:"10px 14px",background:C.surface,borderRadius:8}},q.def)
+      ),
+      h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:16}},
+        q.opts.map(function(opt,i){
+          var bg=C.surface, bo=C.border, co=C.text;
+          if(chosen){
+            if(opt===q.word){bg="#16a34a22";bo=C.green;co=C.green;}
+            else if(opt===chosen){bg="#dc262622";bo=C.red;co=C.red;}
+            else co=C.muted;
+          }
+          return h("button",{key:opt,onClick:function(){pick(opt);},
+            style:{padding:"14px 16px",borderRadius:12,border:"1.5px solid "+bo,
+              background:bg,color:co,fontWeight:600,fontSize:15,textAlign:"left",
+              cursor:chosen?"default":"pointer",transition:"all .2s"}},
+            h("span",{style:{color:C.muted,fontSize:12,marginRight:8}},
+              ["A","B","C","D"][i]+"."),
+            opt);
+        })
+      ),
+      chosen && h(Btn,{style:{marginTop:16},onClick:next},
+        idx===qs.length-1?"Ver resultado →":"Próxima →")
+    )
+  );
+}
+
+// ── WRITING
+function Writing(props){
+  var _s1 = useState(rnd(PROMPTS));  var prompt = _s1[0];
+  var _s2 = useState("");            var text = _s2[0];    var setText = _s2[1];
+  var _s3 = useState(false);         var loading = _s3[0]; var setLoading = _s3[1];
+  var _s4 = useState(null);          var feedback = _s4[0]; var setFeedback = _s4[1];
+  var _s5 = useState(localStorage.getItem("det_key")||""); var apiKey = _s5[0]; var setApiKey = _s5[1];
+  var _s6 = useState(!localStorage.getItem("det_key"));    var showKey = _s6[0]; var setShowKey = _s6[1];
+  var wc = text.trim().split(/\s+/).filter(Boolean).length;
+
+  function saveKey(){ localStorage.setItem("det_key",apiKey); setShowKey(false); }
+
+  function getFeedback(){
+    if(wc<30||!apiKey) return;
+    setLoading(true);
+    fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":apiKey,
+        "anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514", max_tokens:900,
+        system:'Você é avaliador do DET (Duolingo English Test). Aluno brasileiro, meta 60 pts. Retorne SOMENTE JSON válido sem markdown: {"score":1-5,"level":"B1","summary":"2 frases em português","strengths":["s1","s2"],"improvements":["i1","i2","i3"],"corrected":"frase melhorada"}',
+        messages:[{role:"user",content:'Prompt: "'+prompt+'"\nResposta: "'+text+'"'}]
+      })
+    })
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var raw=(d.content||[]).find(function(b){return b.type==="text";});
+      raw = raw ? raw.text : "{}";
+      raw = raw.replace(/```json|```/g,"").trim();
+      setFeedback(JSON.parse(raw));
+      setLoading(false);
+    })
+    .catch(function(){
+      setFeedback({score:2,level:"B1",summary:"Erro ao conectar. Verifique sua API key.",strengths:[],improvements:[],corrected:""});
+      setLoading(false);
+    });
+  }
+
+  return h("div",{className:"fi"},
+    h("div",{style:CARD},
+      h("div",{style:ST},"🖊 Writing Practice"),
+      showKey && h("div",{style:Object.assign({},CARD,{background:"#1a1f2e",border:"1px solid "+C.yellow+"33",marginBottom:16})},
+        h("div",{style:{fontSize:13,color:C.yellow,fontWeight:700,marginBottom:6}},"🔑 API Key Anthropic (para feedback IA)"),
+        h("div",{style:{fontSize:12,color:C.muted,marginBottom:10}},
+          "Obtenha em ",
+          h("a",{href:"https://console.anthropic.com",target:"_blank",
+            style:{color:C.blue}},"console.anthropic.com"),
+          " → API Keys"),
+        h("div",{style:{display:"flex",gap:8}},
+          h("input",{value:apiKey,onChange:function(e){setApiKey(e.target.value);},
+            placeholder:"sk-ant-...",type:"password",
+            style:{flex:1,padding:"10px 14px",borderRadius:10,background:C.surface,
+              border:"1px solid "+C.border,color:C.text,fontSize:13,outline:"none"}}),
+          h(Btn,{style:{padding:"10px 16px",fontSize:13},onClick:saveKey},"Salvar")
+        ),
+        h(Btn,{variant:"ghost",style:{marginTop:8,padding:"6px 14px",fontSize:12},
+          onClick:function(){setShowKey(false);}},"Pular por agora")
+      ),
+      h("div",{style:Object.assign({},CARD,{background:"#0d1a2e",border:"1px solid #1e3a5f",marginBottom:16})},
+        h("div",{style:{fontSize:11,color:C.blue,fontWeight:700,letterSpacing:1,marginBottom:8}},"PROMPT"),
+        h("div",{style:{fontSize:16,lineHeight:1.7,fontStyle:"italic"}},'"'+prompt+'"')
+      ),
+      !feedback
+        ? h("div",null,
+            h("textarea",{value:text,onChange:function(e){setText(e.target.value);},
+              placeholder:"Escreva sua resposta em inglês aqui... (mínimo 50 palavras)",
+              style:{width:"100%",minHeight:160,padding:"14px 16px",background:C.surface,
+                border:"1.5px solid "+C.border,borderRadius:12,color:C.text,fontSize:15,
+                lineHeight:1.7,outline:"none",resize:"vertical",marginBottom:8}}),
+            h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},
+              h("div",{style:{display:"flex",gap:12,alignItems:"center"}},
+                h("span",{style:{fontSize:12,color:wc>=50?C.green:C.muted}},
+                  wc+" palavras"+(wc>=50?" ✓":"")),
+                !showKey&&h("button",{onClick:function(){setShowKey(true);},
+                  style:{background:"none",border:"1px solid "+C.border,color:C.muted,
+                    padding:"4px 10px",borderRadius:8,fontSize:11,cursor:"pointer"}},"🔑 API Key")
+              ),
+              h(Btn,{onClick:getFeedback,
+                style:{opacity:wc<30||loading?.5:1,pointerEvents:wc<30||loading?"none":"auto"}},
+                loading?"Analisando...":"Avaliar com IA →")
+            )
+          )
+        : h("div",{className:"fi"},
+            h("div",{style:Object.assign({},CARD,{background:"linear-gradient(135deg,#0d1a2e,#111a35)",
+              border:"1px solid rgba(34,211,160,.2)",textAlign:"center",marginBottom:16})},
+              h("div",{style:{fontSize:36,marginBottom:8}},["","😕","🙂","👍","🌟","🚀"][feedback.score||3]),
+              h("div",{style:{fontSize:28,fontWeight:900,color:C.accent}},feedback.level),
+              h("div",{style:{display:"flex",justifyContent:"center",gap:4,margin:"6px 0"}},
+                [1,2,3,4,5].map(function(n){
+                  return h("span",{key:n,style:{fontSize:20,opacity:n<=(feedback.score||3)?1:.2}},"★");
+                })
+              ),
+              h("div",{style:{fontSize:14,lineHeight:1.6,maxWidth:480,margin:"0 auto"}},feedback.summary)
+            ),
+            h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}},
+              h("div",{style:Object.assign({},CARD,{background:"#16a34a18",border:"1px solid #16a34a33"})},
+                h("div",{style:{fontSize:11,color:C.green,fontWeight:700,letterSpacing:1,marginBottom:10}},"✓ PONTOS FORTES"),
+                (feedback.strengths||[]).map(function(s,i){
+                  return h("div",{key:i,style:{fontSize:13,marginBottom:6}},"• "+s);
+                })
+              ),
+              h("div",{style:Object.assign({},CARD,{background:"#dc262618",border:"1px solid #dc262633"})},
+                h("div",{style:{fontSize:11,color:C.red,fontWeight:700,letterSpacing:1,marginBottom:10}},"↑ MELHORAR"),
+                (feedback.improvements||[]).map(function(s,i){
+                  return h("div",{key:i,style:{fontSize:13,marginBottom:6}},"• "+s);
+                })
+              )
+            ),
+            feedback.corrected && h("div",{style:Object.assign({},CARD,{background:"#1a1f2e",marginBottom:16})},
+              h("div",{style:{fontSize:11,color:C.purple,fontWeight:700,letterSpacing:1,marginBottom:8}},"✏️ FRASE MELHORADA"),
+              h("div",{style:{fontSize:14,fontStyle:"italic",lineHeight:1.6}},'"'+feedback.corrected+'"')
+            ),
+            h("div",{style:{display:"flex",gap:12}},
+              h(Btn,{variant:"ghost",onClick:function(){setText("");setFeedback(null);}},"Tentar novamente"),
+              h(Btn,{onClick:function(){props.onDone(50);}},"+50 XP · Concluir →")
+            )
+          )
+    )
+  );
+}
+
+// ── TIPS
+function Tips(props){
+  return h("div",{className:"fi"},
+    h("div",{style:Object.assign({},CARD,{marginBottom:16})},
+      h("div",{style:ST},"💡 Estratégias para o DET"),
+      h("div",{style:{fontSize:14,color:C.muted,lineHeight:1.7}},
+        "O DET testa ",h("strong",null,"rapidez de reconhecimento")," e ",
+        h("strong",null,"profundidade de vocabulário"),". Técnicas essenciais:")
+    ),
+    TIPS.map(function(tip,i){
+      return h("div",{key:i,className:"fi",
+        style:Object.assign({},CARD,{borderLeft:"3px solid "+tip.col})},
+        h("div",{style:{display:"flex",gap:14,alignItems:"flex-start"}},
+          h("div",{style:{fontSize:24,width:42,height:42,display:"flex",alignItems:"center",
+            justifyContent:"center",background:tip.col+"18",borderRadius:10,flexShrink:0}},tip.icon),
+          h("div",null,
+            h("div",{style:{fontSize:15,fontWeight:700,color:tip.col,marginBottom:6}},tip.title),
+            h("div",{style:{fontSize:14,lineHeight:1.7}},tip.tip)
+          )
+        )
+      );
+    }),
+    h(Btn,{onClick:function(){props.onDone(0);}},"✓ Li tudo · Continuar")
+  );
+}
+
+// ── APP PRINCIPAL
 function App(){
-  const [screen,setScreen]=useState("dashboard");
-  const [exercise,setExercise]=useState(null);
-  const [xp,setXP]=useState(0);
-  const [completed,setCompleted]=useState([]);
-  const score=estimateDETScore(xp);
+  var _s1 = useState("dash");  var screen = _s1[0]; var setScreen = _s1[1];
+  var _s2 = useState(null);    var ex = _s2[0];     var setEx = _s2[1];
+  var _s3 = useState(0);       var xp = _s3[0];     var setXP = _s3[1];
+  var _s4 = useState([]);      var done = _s4[0];   var setDone = _s4[1];
 
-  const startExercise=(id)=>{setExercise(id);setScreen("exercise");};
-  const finishExercise=(gained)=>{
-    setXP(x=>x+gained);
-    setCompleted(c=>[...c,exercise]);
-    setScreen("dashboard");setExercise(null);
+  function start(id){ setEx(id); setScreen("ex"); }
+  function finish(gained){
+    setXP(function(x){return x+gained;});
+    setDone(function(d){return d.concat([ex]);});
+    setScreen("dash"); setEx(null);
+  }
+
+  var names = {
+    "read-select":"👁 Read & Select","read-complete":"✏️ Read & Complete",
+    "vocabulary":"📖 Vocabulary","writing":"🖊 Writing Practice","tips":"💡 Estratégias"
   };
 
-  const exNames={"read-select":"👁 Read & Select","read-complete":"✏️ Read & Complete",
-    "vocabulary":"📖 Vocabulary","writing":"🖊 Writing Practice","tip":"💡 Estratégias"};
+  var score = estScore(xp);
 
-  return (
-    <div style={{minHeight:"100vh",background:C.bg,paddingBottom:80}}>
-      {/* Header */}
-      <div style={{background:"linear-gradient(135deg,#0d1127,#111a35)",borderBottom:`1px solid ${C.border}`,
-        padding:"14px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",
-        position:"sticky",top:0,zIndex:100}}>
-        <div>
-          <div style={{fontSize:20,fontWeight:900,color:C.accent,letterSpacing:-.5}}>DET·Study</div>
-          <div style={{fontSize:10,color:C.muted,fontWeight:600,letterSpacing:1}}>DUOLINGO ENGLISH TEST PREP</div>
-        </div>
-        <div style={{display:"flex",gap:12}}>
-          {[["XP",xp+"xp",C.accent],["DET",score,C.yellow],["Feito",completed.length,C.blue]].map(([l,v,col])=>(
-            <div key={l} style={{padding:"4px 12px",borderRadius:10,background:`${col}10`,
-              border:`1px solid ${col}25`,textAlign:"center"}}>
-              <div style={{fontSize:18,fontWeight:800,color:col,lineHeight:1}}>{v}</div>
-              <div style={{fontSize:10,color:C.muted,fontWeight:600}}>{l}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Back bar */}
-      {screen==="exercise"&&(
-        <div style={{padding:"10px 24px",background:C.surface,borderBottom:`1px solid ${C.border}`,
-          display:"flex",alignItems:"center",gap:12}}>
-          <button onClick={()=>setScreen("dashboard")}
-            style={{...btn("ghost"),padding:"6px 12px",fontSize:13}}>← Voltar</button>
-          <span style={{fontSize:14,color:C.muted}}>{exNames[exercise]}</span>
-        </div>
-      )}
-
-      <div style={{maxWidth:780,margin:"0 auto",padding:"24px 16px"}}>
-        {screen==="dashboard"&&<Dashboard xp={xp} onStart={startExercise} completed={completed}/>}
-        {screen==="exercise"&&exercise==="read-select"&&<ReadSelect onDone={finishExercise}/>}
-        {screen==="exercise"&&exercise==="read-complete"&&<ReadComplete onDone={finishExercise}/>}
-        {screen==="exercise"&&exercise==="vocabulary"&&<Vocabulary onDone={finishExercise}/>}
-        {screen==="exercise"&&exercise==="writing"&&<Writing onDone={finishExercise}/>}
-        {screen==="exercise"&&exercise==="tip"&&<TestTips onDone={finishExercise}/>}
-      </div>
-    </div>
+  return h("div",{style:{minHeight:"100vh",background:C.bg,paddingBottom:80}},
+    // Header
+    h("div",{style:{background:"linear-gradient(135deg,#0d1127,#111a35)",
+      borderBottom:"1px solid "+C.border,padding:"14px 24px",display:"flex",
+      alignItems:"center",justifyContent:"space-between",
+      position:"sticky",top:0,zIndex:100}},
+      h("div",null,
+        h("div",{style:{fontSize:20,fontWeight:900,color:C.accent,letterSpacing:-.5}},"DET·Study"),
+        h("div",{style:{fontSize:10,color:C.muted,fontWeight:600,letterSpacing:1}},
+          "DUOLINGO ENGLISH TEST PREP")
+      ),
+      h("div",{style:{display:"flex",gap:10}},
+        [[xp+"xp","XP",C.accent],[score,"DET",C.yellow],[done.length,"FEITOS",C.blue]].map(function(item){
+          return h("div",{key:item[1],style:{padding:"4px 12px",borderRadius:10,textAlign:"center",
+            background:item[2]+"10",border:"1px solid "+item[2]+"25"}},
+            h("div",{style:{fontSize:18,fontWeight:800,color:item[2],lineHeight:1}},item[0]),
+            h("div",{style:{fontSize:10,color:C.muted,fontWeight:600}},item[1]));
+        })
+      )
+    ),
+    // Barra voltar
+    screen==="ex" && h("div",{style:{padding:"10px 24px",background:C.surface,
+      borderBottom:"1px solid "+C.border,display:"flex",alignItems:"center",gap:12}},
+      h(Btn,{variant:"ghost",style:{padding:"6px 12px",fontSize:13},
+        onClick:function(){setScreen("dash");setEx(null);}},
+        "← Voltar"),
+      h("span",{style:{fontSize:14,color:C.muted}},names[ex]||"")
+    ),
+    // Conteúdo
+    h("div",{style:{maxWidth:780,margin:"0 auto",padding:"24px 16px"}},
+      screen==="dash"             && h(Dashboard,   {xp:xp,onStart:start,completed:done}),
+      screen==="ex"&&ex==="read-select"   && h(ReadSelect,  {onDone:finish}),
+      screen==="ex"&&ex==="read-complete" && h(ReadComplete, {onDone:finish}),
+      screen==="ex"&&ex==="vocabulary"    && h(Vocabulary,   {onDone:finish}),
+      screen==="ex"&&ex==="writing"       && h(Writing,      {onDone:finish}),
+      screen==="ex"&&ex==="tips"          && h(Tips,         {onDone:finish})
+    )
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById("root")).render(h(App,null));
 </script>
 </body>
 </html>
